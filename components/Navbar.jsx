@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableHighlight, Image } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native'
 import {Link} from "react-router-native"
 
 export default class Navbar extends Component {
@@ -7,7 +7,7 @@ export default class Navbar extends Component {
         return (
             <View style={styles.navContainer}>
                 <Link
-                    component={TouchableHighlight}
+                    component={TouchableOpacity}
                     activeOpacity={0.5}
                     to="/account"
                 >
@@ -17,7 +17,7 @@ export default class Navbar extends Component {
                     />
                 </Link>
                 <Link
-                    component={TouchableHighlight}
+                    component={TouchableOpacity}
                     activeOpacity={0.5}
                     to="/achievements"
                 >
@@ -27,7 +27,7 @@ export default class Navbar extends Component {
                     />  
                 </Link>
                 <Link
-                    component={TouchableHighlight}
+                    component={TouchableOpacity}
                     activeOpacity={0.5}
                     to="/"
                 >
@@ -37,7 +37,7 @@ export default class Navbar extends Component {
                     />
                 </Link>
                 <Link
-                    component={TouchableHighlight}
+                    component={TouchableOpacity}
                     activeOpacity={0.5}
                     to="/assitant"
                 >

@@ -5,7 +5,7 @@ export default class TrainingScreen extends Component {
     render() {
         return (
             <View>
-                <Text> textInComponent </Text>
+                <Text> Trainings </Text>
             </View>
         )
     }

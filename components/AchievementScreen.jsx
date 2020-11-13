@@ -6,7 +6,7 @@ export default class AchievementScreen
     render() {
         return (
             <View>
-                <Text> textInComponent </Text>
+                <Text> Achievements </Text>
             </View>
         )
     }

@@ -13,8 +13,8 @@ import Navbar from "./Navbar"
 export default class Dashboard extends Component {
     render() {
         return (
-            <View>
-                <NativeRouter>
+            <View style={styles.dashboardContainer}>
+                <NativeRouter  >
                     <View style={styles.dashboardContainer}>
                         <Switch>
                         <Route
@@ -28,15 +28,15 @@ export default class Dashboard extends Component {
                         />
                         <Route 
                             path="/account"  
-                            component={ComingSoonScreen}
+                            component={AccountScreen}
                         />
                         <Route 
                             path="/assitant"  
-                            component={ComingSoonScreen}
+                            component={AssistantScreen}
                         />
                         <Route 
                             path="/achievements"  
-                            component={ComingSoonScreen}
+                            component={AchievementScreen}
                         />
                         </Switch>
                         <Navbar/>
