@@ -16,7 +16,8 @@ export default class TrainingScreen extends Component {
 
     state = {
         trainings: [],
-        exForFetch: []
+        exForFetch: [],
+        fetchWasSucc: false
     }
 
     componentDidMount(){
@@ -26,8 +27,8 @@ export default class TrainingScreen extends Component {
             this.setState({
                 trainings: res.data.data.trainings,
             })
-            console.log("state-------------------------------------------------------------")
-            console.log(this.state.trainings);
+            // console.log("state-------------------------------------------------------------")
+            // console.log(this.state.trainings);
         })
         .catch(err => {
             console.log(err);
@@ -39,13 +40,13 @@ export default class TrainingScreen extends Component {
         this.setState({exForFetch: item.exercises})
         for(let i = 0; i < item.exercises.length; i++)
         {
-            const videoInfo = await FileSystem.getInfoAsync(item.exercises[i].vid)
+            const videoInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory + item.exercises[i].vid)
             if (!videoInfo.exists)
             {   
                 const callback = downloadProgrerss => {
                     const progress = downloadProgrerss.totalBytesWritten / downloadProgrerss.totalBytesExpectedToWwrite
+                    // console.log(progress)
                 }
-                console.log("EXERCISES -----------------------------------------")
                 console.log(item.exercises[i].vid)
                 const downloadResumable = FileSystem.createDownloadResumable(
                     'https://nya-api.herokuapp.com/nya/api/v1/media/' + item.exercises[i].vid,
@@ -62,6 +63,8 @@ export default class TrainingScreen extends Component {
                 } finally {
                     console.log("----------------------------------------------")
                     console.log("get request finalized")
+                    this.setState({fetchWasSucc: true})
+
                 }
             }
             else {
@@ -107,17 +110,13 @@ export default class TrainingScreen extends Component {
                                         component={TouchableOpacity}
                                         activeOpacity={0.5}
                                         onPress={()=>{this.getEx(item)}}
+                                        to={this.state.fetchWasSucc ? "/exercises" : "/"}
                                     >
-                                        <View>
+                                        <View style={{width: "100%", height: "100%",}}>
                                             <Image
                                                 style={styles.trainingPacketsBg}
                                                 source={{uri: "https://nya-api.herokuapp.com/nya/api/v1/media/" + item.img }}
                                             />
-                                            <TouchableOpacity>
-                                                <Text style={styles.downloadButton}>
-                                                    Download
-                                                </Text>
-                                            </TouchableOpacity>
                                             <LinearGradient
                                             colors={["transparent", item.color]}
                                             start={{ x: 0, y: 0.9 }}
@@ -278,7 +277,6 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         // fontFamily: "Poppins_400Regular",
       },
-    
       valueOrb: {
         width: 13,
         height: 13,
@@ -298,7 +296,5 @@ const styles = StyleSheet.create({
         backgroundColor: "#D2D2D2",
         opacity: 0.5,
       },
-      downloadButton: {
-      }
       
 })
