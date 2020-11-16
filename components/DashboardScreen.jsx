@@ -38,16 +38,6 @@ export default class Dashboard extends Component {
                             path="/achievements"  
                             component={AchievementScreen}
                         />
-                        <Route
-                            path="/exercises"
-                            render={(props) => (
-                            <ExercisesScreen
-                                {...props}
-                                trainingName={this.state.trainingName}
-                                getTrainingName={this.getTrainingName.bind(this)}
-                            />
-                            )}
-                        />
                         </Switch>
                         <Navbar/>
                     </View>

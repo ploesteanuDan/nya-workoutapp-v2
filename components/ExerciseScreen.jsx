@@ -5,7 +5,7 @@ export default class ExerciseScreen extends Component {
     render() {
         return (
             <View>
-                <Text> textInComponent </Text>
+                <Text> {this.props.trainingName} </Text>
             </View>
         )
     }

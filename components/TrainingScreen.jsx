@@ -12,12 +12,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import axios from 'axios'
 import * as FileSystem from 'expo-file-system';
 
+import ExerciseScreen from './ExerciseScreen'
+
 export default class TrainingScreen extends Component {
 
     state = {
         trainings: [],
         exForFetch: [],
-        fetchWasSucc: false
     }
 
     componentDidMount(){
@@ -63,18 +64,31 @@ export default class TrainingScreen extends Component {
                 } finally {
                     console.log("----------------------------------------------")
                     console.log("get request finalized")
-                    this.setState({fetchWasSucc: true})
+                    this.setState({
+                        fetchWasSucc: true,
+                        trainingName: item.name
+                    })
 
                 }
             }
             else {
                 console.log("video ", item.exercises[i].vid, " already downloaded")
+                this.setState({
+                    fetchWasSucc: true,
+                    trainingName: item.name
+                })
+
             }
 
         }
     }
 
     render() {
+
+        if (this.state.fetchWasSucc){
+            return <ExerciseScreen trainingName={this.state.trainingName}/>
+        }
+        else 
         return (
             <View style={styles.container}>
             <Spring
