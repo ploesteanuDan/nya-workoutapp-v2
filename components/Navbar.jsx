@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native'
 import {Link} from "react-router-native"
 
 export default class Navbar extends Component {

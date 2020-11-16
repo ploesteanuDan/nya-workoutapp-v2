@@ -7,7 +7,7 @@ import TrainingScreen from './TrainingScreen'
 import AccountScreen from './AccountScreen'
 import AssistantScreen from './AssistantScreen'
 import AchievementScreen from './AchievementScreen'
-import ComingSoonScreen from './ComingSoonScreen'
+import ExerciseScreen from './ExerciseScreen'
 import Navbar from "./Navbar"
 
 export default class Dashboard extends Component {
@@ -37,6 +37,16 @@ export default class Dashboard extends Component {
                         <Route 
                             path="/achievements"  
                             component={AchievementScreen}
+                        />
+                        <Route
+                            path="/exercises"
+                            render={(props) => (
+                            <ExercisesScreen
+                                {...props}
+                                trainingName={this.state.trainingName}
+                                getTrainingName={this.getTrainingName.bind(this)}
+                            />
+                            )}
                         />
                         </Switch>
                         <Navbar/>
