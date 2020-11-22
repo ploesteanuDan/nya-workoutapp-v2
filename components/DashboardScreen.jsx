@@ -11,6 +11,17 @@ import ExerciseScreen from './ExerciseScreen'
 import Navbar from "./Navbar"
 
 export default class Dashboard extends Component {
+
+    state = {
+        navToggle: true
+    }
+
+    handleNavToggle(navToggle){
+        this.setState({
+            navToggle: navToggle
+        })
+    }
+
     render() {
         return (
             <View style={styles.dashboardContainer}>
@@ -23,6 +34,7 @@ export default class Dashboard extends Component {
                             render={(props) => (
                                 <TrainingScreen
                                     {...props}
+                                    handleNavToggle={this.handleNavToggle.bind(this)}
                                 />
                             )}
                         />
@@ -39,7 +51,7 @@ export default class Dashboard extends Component {
                             component={AchievementScreen}
                         />
                         </Switch>
-                        <Navbar/>
+                        <Navbar navToggle={this.state.navToggle}/>
                     </View>
                 </NativeRouter>
             </View>

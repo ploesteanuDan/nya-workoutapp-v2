@@ -21,10 +21,14 @@ export default class TrainingScreen extends Component {
         exForFetch: [],
     }
 
+    handleReturn(){
+        this.setState({fetchWasSucc: false})
+        this.props.handleNavToggle(true)
+    }
+
     componentDidMount(){
         axios.get("https://nya-api.herokuapp.com/nya/api/v1/trainings")
         .then(res => {
-            resData = res.data
             this.setState({
                 trainings: res.data.data.trainings,
             })
@@ -44,10 +48,12 @@ export default class TrainingScreen extends Component {
             const videoInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory + item.exercises[i].vid)
             if (!videoInfo.exists)
             {   
-                const callback = downloadProgrerss => {
-                    const progress = downloadProgrerss.totalBytesWritten / downloadProgrerss.totalBytesExpectedToWwrite
-                    // console.log(progress)
-                }
+                const callback = downloadProgress => {
+                    const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+                    this.setState({
+                      downloadProgress: progress,
+                    });
+                  };
                 console.log(item.exercises[i].vid)
                 const downloadResumable = FileSystem.createDownloadResumable(
                     'https://nya-api.herokuapp.com/nya/api/v1/media/' + item.exercises[i].vid,
@@ -75,7 +81,7 @@ export default class TrainingScreen extends Component {
                 console.log("video ", item.exercises[i].vid, " already downloaded")
                 this.setState({
                     fetchWasSucc: true,
-                    trainingName: item.name
+                    training: item
                 })
 
             }
@@ -84,9 +90,9 @@ export default class TrainingScreen extends Component {
     }
 
     render() {
-
+        console.log("what",this.state.downloadProgress)
         if (this.state.fetchWasSucc){
-            return <ExerciseScreen trainingName={this.state.trainingName}/>
+            return <ExerciseScreen handleReturn={this.handleReturn.bind(this)} training={this.state.training} handleNavToggle={this.props.handleNavToggle}/>
         }
         else 
         return (
@@ -255,7 +261,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: "30%",
         left: "5%",
-        // fontFamily: "Poppins_800ExtraBold_Italic",
+        fontFamily: "Poppins_800ExtraBold_Italic",
         lineHeight: 60,
     },
     trainingPacketsBg: {
@@ -272,7 +278,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 10,
         color: "#D2D2D2",
-        // fontFamily: "Poppins_400Regular",
+        fontFamily: "Poppins_400Regular",
       },
       trainingPacketsAtributes: {
         color: "#D2D2D2",
@@ -289,7 +295,7 @@ const styles = StyleSheet.create({
         color: "#D2D2D2",
         marginRight: 10,
         marginLeft: 10,
-        // fontFamily: "Poppins_400Regular",
+        fontFamily: "Poppins_400Regular",
       },
       valueOrb: {
         width: 13,
@@ -310,5 +316,4 @@ const styles = StyleSheet.create({
         backgroundColor: "#D2D2D2",
         opacity: 0.5,
       },
-      
 })
