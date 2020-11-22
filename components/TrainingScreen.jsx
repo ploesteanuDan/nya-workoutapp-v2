@@ -14,12 +14,44 @@ import * as FileSystem from 'expo-file-system';
 
 import ExerciseScreen from './ExerciseScreen'
 
+const searchArrays = require('../assets/searchArrays')
+
 export default class TrainingScreen extends Component {
 
     state = {
         trainings: [],
         exForFetch: [],
     }
+
+    handleSearch(text){
+        text = text.toLowerCase()
+        for(let i = 0; i < searchArrays.searchArrays.length; i++)
+        {
+            if(searchArrays.searchArrays[i].includes(text))
+        {
+        axios.get("https://nya-api.herokuapp.com/nya/api/v1/trainings?mainFocus=" + searchArrays.searchArrays[i][0])
+        .then(res => {
+            this.setState({
+                trainings: res.data.data.trainings
+            })
+        })
+        }
+        }
+        if(text==""){
+            axios.get("https://nya-api.herokuapp.com/nya/api/v1/trainings")
+            .then(res => {
+                this.setState({
+                    trainings: res.data.data.trainings,
+                })
+                // console.log("state-------------------------------------------------------------")
+                // console.log(this.state.trainings);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    }
+
 
     handleReturn(){
         this.setState({fetchWasSucc: false})
@@ -89,8 +121,8 @@ export default class TrainingScreen extends Component {
         }
     }
 
+
     render() {
-        console.log("what",this.state.downloadProgress)
         if (this.state.fetchWasSucc){
             return <ExerciseScreen handleReturn={this.handleReturn.bind(this)} training={this.state.training} handleNavToggle={this.props.handleNavToggle}/>
         }
@@ -120,7 +152,13 @@ export default class TrainingScreen extends Component {
             >
                 {(mainSpring)=>(
                     <View style={mainSpring}>
-                        <TextInput style={styles.searchButton} placeholder="Search" />
+                        <TextInput 
+                            style={styles.searchButton} 
+                            onChangeText={(text)=>{this.handleSearch(text)}}
+                            placeholder="Search" 
+                            placeholderTextColor={"#D2D2D2"}
+                            allowFontScaling={false}
+                        />
                         <FlatList
                             data={this.state.trainings}
                             keyExtractor={(item, id) => id.toString()}
@@ -150,41 +188,38 @@ export default class TrainingScreen extends Component {
                                             height: 2500,
                                             }}
                                             />
-                                            <Text style={styles.trainingName} >
+                                            <Text style={styles.trainingName} allowFontScaling={false} >
                                                 {item.name}
                                             </Text>
                                             <View style={styles.trainingPacketsAtributesContainer}>
                                                 <View style={styles.trainingPacketsAtributes}>
-                                                    <Text style={styles.trainingPacketsAtributesName}>
-                                                    Intensity
+                                                    <Text style={styles.trainingPacketsAtributesName} allowFontScaling={false}>
+                                                        Intensity
                                                     </Text>
-                                                    <Text
-                                                    style={styles.trainingPacketsAtributesValue}
-                                                    ></Text>
                                                     <Image
-                                                    style={
-                                                        item.intensity > 0
-                                                        ? styles.valueOrb
-                                                        : styles.noValueOrb
-                                                    }
+                                                        style={
+                                                            item.intensity > 0
+                                                            ? styles.valueOrb
+                                                            : styles.noValueOrb
+                                                        }
                                                     />
                                                     <Image
-                                                    style={
-                                                        item.intensity  > 1
-                                                        ? styles.valueOrb
-                                                        : styles.noValueOrb
-                                                    }
+                                                        style={
+                                                            item.intensity  > 1
+                                                            ? styles.valueOrb
+                                                            : styles.noValueOrb
+                                                        }
                                                     />
                                                     <Image
-                                                    style={
-                                                        item.intensity  > 2
-                                                        ? styles.valueOrb
-                                                        : styles.noValueOrb
-                                                    }
+                                                        style={
+                                                            item.intensity  > 2
+                                                            ? styles.valueOrb
+                                                            : styles.noValueOrb
+                                                        }
                                                     />
                                                 </View>
                                                 <View style={styles.trainingPacketsAtributes}>
-                                                    <Text style={styles.trainingPacketsAtributesName}>
+                                                    <Text style={styles.trainingPacketsAtributesName} allowFontScaling={false}>
                                                     Duration
                                                     </Text>
 
@@ -257,7 +292,7 @@ const styles = StyleSheet.create({
     },
     trainingName: {
         color: "#D2D2D2",
-        fontSize: 50,
+        fontSize: 40,
         position: "absolute",
         bottom: "30%",
         left: "5%",
@@ -289,6 +324,7 @@ const styles = StyleSheet.create({
         bottom: "20%",
         left: "2%",
         flexDirection: "row",
+        justifyContent: "center"
       },
       trainingPacketsAtributesName: {
         fontSize: 20,
@@ -302,12 +338,12 @@ const styles = StyleSheet.create({
         height: 13,
         borderRadius: 12,
         backgroundColor: "#D2D2D2",
-        margin: 6,
+        marginTop: 9,
         marginLeft: 2,
         marginRight: 2,
       },
       noValueOrb: {
-        margin: 6,
+        marginTop: 9,
         marginLeft: 2,
         marginRight: 2,
         width: 13,

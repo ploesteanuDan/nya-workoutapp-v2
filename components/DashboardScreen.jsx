@@ -7,7 +7,6 @@ import TrainingScreen from './TrainingScreen'
 import AccountScreen from './AccountScreen'
 import AssistantScreen from './AssistantScreen'
 import AchievementScreen from './AchievementScreen'
-import ExerciseScreen from './ExerciseScreen'
 import Navbar from "./Navbar"
 
 export default class Dashboard extends Component {

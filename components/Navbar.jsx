@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Image, Dimensions } from 'react-native'
 import {Link} from "react-router-native"
 import {Spring} from 'react-spring/renderprops'
 export default class Navbar extends Component {
@@ -8,10 +8,10 @@ export default class Navbar extends Component {
                 <Spring
                 from={{ 
                     position: "absolute",
-                    bottom: "2.5%",
+                    bottom: "2%",
                     backgroundColor: "#191919",
-                    width: "90%",
-                    height: "10%",
+                    width: Dimensions.get("window").width * 0.90,
+                    height: Dimensions.get("window").width * 0.23,
                     borderRadius: 20,
                     flexDirection: "row",
                     alignItems: "center",
@@ -21,12 +21,13 @@ export default class Navbar extends Component {
                     position: "absolute",
                     bottom: this.props.navToggle ? "2.5%" : "-100%",
                     backgroundColor: "#191919",
-                    width: "90%",
-                    height: "10%",
+                    width: Dimensions.get("window").width * 0.90,
+                    height: Dimensions.get("window").width * 0.23,
                     borderRadius: 20,
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "space-evenly",
+                    opacity: 0.7
                  }}>
                 {props => 
                     <View style={props}>

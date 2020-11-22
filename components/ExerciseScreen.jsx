@@ -86,7 +86,7 @@ export default class ExercisesScreen extends Component {
             >
               <View style={styles.titleContainer}>
                 <Image style={styles.backButton} source={require("../assets/backButton.png")}/>
-                <Text style={styles.title}>
+                <Text style={styles.title} allowFontScaling={false}>
                   {this.props.training.name}
                 </Text>
               </View>
@@ -128,8 +128,8 @@ export default class ExercisesScreen extends Component {
                       isLooping={false}
                       style={styles.exPhoto}
                     />
-                    <Text style={styles.exName}>{item.name}</Text>
-                    <Text style={styles.exReps}>
+                    <Text style={styles.exName}allowFontScaling={false}>{item.name}</Text>
+                    <Text style={styles.exReps}allowFontScaling={false}>
                       {item.reps}
                       {" REPS"}
                     </Text>
@@ -144,7 +144,7 @@ export default class ExercisesScreen extends Component {
                     bottom: 10,
                     right: 10,
                     fontFamily: "Poppins_600SemiBold_Italic",
-                    fontSize: 20,
+                    fontSize: 15,
                     color: item.done ? "#191919": "#D2D2D2",
                     backgroundColor: item.done ? "#50d6d3" : "#191919",
                     padding: 10,
@@ -154,6 +154,7 @@ export default class ExercisesScreen extends Component {
                     {doneButtonProps =>                           
                   <Text          
                   onPress={()=>{this.getExStatus(item)}} 
+                  allowFontScaling={false}
                   style={doneButtonProps}
                           >
                             Done
@@ -199,7 +200,10 @@ export default class ExercisesScreen extends Component {
         }}>
           {finishScreenProps => 
             <View style={finishScreenProps}>
-              <Text style={styles.finishScreenText}>
+              <Text 
+                style={styles.finishScreenText}
+                allowFontScaling={false}
+              >
                 Training finished!
               </Text>
               <Spring
@@ -220,7 +224,10 @@ export default class ExercisesScreen extends Component {
               }}
               to="/"
             >
-              <Text style={styles.finishScreenSubtext} >
+              <Text 
+                style={styles.finishScreenSubtext} 
+                allowFontScaling={false}  
+              >
                 Go to Dashboard
               </Text>
             </Link>
@@ -265,9 +272,9 @@ container: {
     fontFamily: "Poppins_800ExtraBold_Italic",
   },
   backButton:{
-    width: 45,
-    height: 45,
-    marginTop: 20,
+    width: 35,
+    height: 35,
+    marginTop: 10,
     marginBottom: 20,
     marginRight: 20
   },
@@ -291,7 +298,7 @@ container: {
     bottom: 10,
     left: 10,
     fontFamily: "Poppins_600SemiBold_Italic",
-    fontSize: 20,
+    fontSize: 15,
     color: "#D2D2D2",
     backgroundColor: "#191919",
     padding: 10,
@@ -303,25 +310,12 @@ container: {
     top: 10,
     left: 10,
     fontFamily: "Poppins_600SemiBold_Italic",
-    fontSize: 20,
+    fontSize: 15,
     color: "#D2D2D2",
     backgroundColor: "#191919",
     padding: 10,
     paddingVertical: 5,
     borderRadius: 10,
-  },
-  exDone: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    fontFamily: "Poppins_600SemiBold_Italic",
-    fontSize: 20,
-    color: "#D2D2D2",
-    backgroundColor: "#191919",
-    padding: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-    zIndex: 9000
   },
   finishScreenText: {
     top: "45%",
