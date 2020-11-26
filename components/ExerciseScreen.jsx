@@ -153,12 +153,12 @@ export default class ExercisesScreen extends Component {
                     zIndex: 9000, }}>
                     {doneButtonProps =>                           
                   <Text          
-                  onPress={()=>{this.getExStatus(item)}} 
-                  allowFontScaling={false}
-                  style={doneButtonProps}
-                          >
-                            Done
-                          </Text>}
+                    onPress={()=>{this.getExStatus(item)}} 
+                    allowFontScaling={false}
+                    style={doneButtonProps}
+                  >
+                    Done
+                  </Text>}
                 </Spring>
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { LogBox, StyleSheet, View} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 //COMPONENTS IMPORT
@@ -13,6 +13,12 @@ import {
   Poppins_600SemiBold,
   Poppins_600SemiBold_Italic,
 } from "@expo-google-fonts/poppins";
+
+LogBox.ignoreLogs([
+  "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation",
+  "VirtualizedList",
+  "fontFamily"
+]);
 
 export default function App() {
 

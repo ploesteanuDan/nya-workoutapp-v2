@@ -1,10 +1,10 @@
 //REACT NATIVE IMPORTS
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, Dimensions, FlatList, TouchableOpacity, Image, TextInput} from 'react-native'
+import { Text, StyleSheet, View, Dimensions, FlatList, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native'
 import { Link } from "react-router-native";
 
 //STYLE IMPORTS
-import {Spring} from 'react-spring/renderprops'
+import {Spring, config} from 'react-spring/renderprops'
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -54,8 +54,18 @@ export default class TrainingScreen extends Component {
 
 
     handleReturn(){
-        this.setState({fetchWasSucc: false})
+        this.setState({fetchWasSucc: false, itemLoading: null})
         this.props.handleNavToggle(true)
+    }
+
+    handleClearCache(){
+        FileSystem.deleteAsync(FileSystem.documentDirectory + "vid3.mp4")
+        .then(
+            console.log("Deleted")
+        )
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     componentDidMount(){
@@ -80,18 +90,13 @@ export default class TrainingScreen extends Component {
             const videoInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory + item.exercises[i].vid)
             if (!videoInfo.exists)
             {   
-                const callback = downloadProgress => {
-                    const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
-                    this.setState({
-                      downloadProgress: progress,
-                    });
-                  };
-                console.log(item.exercises[i].vid)
+                this.setState({
+                    itemLoading: item.name
+                })
                 const downloadResumable = FileSystem.createDownloadResumable(
                     'https://nya-api.herokuapp.com/nya/api/v1/media/' + item.exercises[i].vid,
                     FileSystem.documentDirectory + item.exercises[i].vid,
                     {},
-                    callback
                 )
     
                 try {
@@ -104,7 +109,7 @@ export default class TrainingScreen extends Component {
                     console.log("get request finalized")
                     this.setState({
                         fetchWasSucc: true,
-                        trainingName: item.name
+                        training: item
                     })
 
                 }
@@ -124,7 +129,11 @@ export default class TrainingScreen extends Component {
 
     render() {
         if (this.state.fetchWasSucc){
-            return <ExerciseScreen handleReturn={this.handleReturn.bind(this)} training={this.state.training} handleNavToggle={this.props.handleNavToggle}/>
+            return <ExerciseScreen 
+                        handleReturn={this.handleReturn.bind(this)}
+                        training={this.state.training} 
+                        handleNavToggle={this.props.handleNavToggle}
+                    />
         }
         else 
         return (
@@ -159,6 +168,7 @@ export default class TrainingScreen extends Component {
                             placeholderTextColor={"#D2D2D2"}
                             allowFontScaling={false}
                         />
+                        <ScrollView>
                         <FlatList
                             data={this.state.trainings}
                             keyExtractor={(item, id) => id.toString()}
@@ -188,6 +198,82 @@ export default class TrainingScreen extends Component {
                                             height: 2500,
                                             }}
                                             />
+                                            <View style={styles.loadingContainer}>
+                                            <Spring
+                                            from={{ 
+                                                opacity: 0,
+                                                position: "absolute",
+                                                flexDirection: "row",
+                                                top: "45%",
+                                                left: "2%" 
+                                            }}
+                                            to={{                                                     
+                                                opacity: this.state.itemLoading == item.name ? 1 : 0,
+                                                position: "absolute",
+                                                flexDirection: "row",
+                                                top: "45%",
+                                                left: "2%"
+                                             }}>
+                                            {props => 
+                                                <View style={props}>
+                                                     <Spring
+                                                reset={false}
+                                                from={{         
+                                                    width: Dimensions.get("window").width * 0.05,
+                                                    height: Dimensions.get("window").width * 0.05,
+                                                    backgroundColor: "#D2D2D2",
+                                                    margin: Dimensions.get("window").width * 0.03,
+                                                    borderRadius: 300,
+                                                }}
+                                                to={{ 
+                                                    width: Dimensions.get("window").width * 0.05,
+                                                    height: Dimensions.get("window").width * 0.05,
+                                                    backgroundColor: this.state.itemLoading == item.name ? "#50d6d3" : "#D2D2D2",
+                                                    margin: Dimensions.get("window").width * 0.03,
+                                                    borderRadius: this.state.itemLoading == item.name ? 3 : 300,
+                                                
+                                                 }}>
+                                                {loadingProps => <Image style={loadingProps}/>}
+                                            </Spring>
+                                            <Spring
+                                                delay={500}
+                                                from={{         
+                                                    width: Dimensions.get("window").width * 0.05,
+                                                    height: Dimensions.get("window").width * 0.05,
+                                                    backgroundColor: "#D2D2D2",
+                                                    margin: Dimensions.get("window").width * 0.03,
+                                                    borderRadius: 300,
+                                                }}
+                                                to={{ 
+                                                    width: Dimensions.get("window").width * 0.05,
+                                                    height: Dimensions.get("window").width * 0.05,
+                                                    backgroundColor: this.state.itemLoading == item.name ? "#50d6d3" : "#D2D2D2",
+                                                    margin: Dimensions.get("window").width * 0.03,
+                                                    borderRadius: this.state.itemLoading == item.name ? 3 : 300,
+                                                 }}>
+                                                {loadingProps => <Image style={loadingProps}/>}
+                                            </Spring>
+                                            <Spring
+                                                delay={1000}
+                                                from={{         
+                                                    width: Dimensions.get("window").width * 0.05,
+                                                    height: Dimensions.get("window").width * 0.05,
+                                                    backgroundColor: "#D2D2D2",
+                                                    margin: Dimensions.get("window").width * 0.03,
+                                                    borderRadius: 300,
+                                                }}
+                                                to={{ 
+                                                    width: Dimensions.get("window").width * 0.05,
+                                                    height: Dimensions.get("window").width * 0.05,
+                                                    backgroundColor: this.state.itemLoading == item.name ? "#50d6d3" : "#D2D2D2",
+                                                    margin: Dimensions.get("window").width * 0.03,
+                                                    borderRadius: this.state.itemLoading == item.name ? 3 : 300,
+                                                 }}>
+                                                {loadingProps => <Image style={loadingProps}/>}
+                                            </Spring>                               
+                                                </View>}
+                                            </Spring>       
+                                            </View>
                                             <Text style={styles.trainingName} allowFontScaling={false} >
                                                 {item.name}
                                             </Text>
@@ -251,6 +337,17 @@ export default class TrainingScreen extends Component {
                                 </View>
                             )}
                         />
+                         <Text
+                            style={styles.noMoreCards}
+                        >
+                            No more workouts available right now. Stay tunned for more.
+                        </Text>
+                        <TouchableOpacity>
+                            <Text style={styles.clearCacheButton} onPress={()=>{this.handleClearCache()}}>
+                                Clear cache
+                            </Text>
+                        </TouchableOpacity>
+                        </ScrollView>
                         <LinearGradient
                             pointerEvents="none"
                             colors={["transparent", "black"]}
@@ -352,4 +449,38 @@ const styles = StyleSheet.create({
         backgroundColor: "#D2D2D2",
         opacity: 0.5,
       },
+      clearCacheButton: {
+          marginBottom: "25%",
+          marginTop: "5%",
+          alignSelf: "center",
+          textAlign: "center",
+          backgroundColor: "#191919",
+          width: Dimensions.get("window").width * 0.95,
+          height: Dimensions.get("window").width * 0.20,
+          borderRadius: 12,
+          lineHeight: Dimensions.get("window").width * 0.25,
+          fontSize: 20,
+          fontFamily: "Poppins_400Regular",
+          color: "#D2D2D2",
+      },
+      loadingContainer:{
+        position: "absolute",
+        flexDirection: "row",
+        top: "45%",
+        left: "2%"
+      },
+
+      loading: {
+        width: Dimensions.get("window").width * 0.05,
+        height: Dimensions.get("window").width * 0.05,
+        backgroundColor: "#D2D2D2",
+        margin: Dimensions.get("window").width * 0.03,
+        borderRadius: 300
+      },
+      noMoreCards: {
+          alignSelf: "center",
+          color: "#D2D2D2",
+          fontFamily: "Poppins_400Regular",
+      }
 })
+
