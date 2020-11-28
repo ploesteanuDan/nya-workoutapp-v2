@@ -342,11 +342,11 @@ export default class TrainingScreen extends Component {
                         >
                             No more workouts available right now. Stay tunned for more.
                         </Text>
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity>
                             <Text style={styles.clearCacheButton} onPress={()=>{this.handleClearCache()}}>
                                 Clear cache
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         </ScrollView>
                         <LinearGradient
                             pointerEvents="none"
@@ -481,6 +481,7 @@ const styles = StyleSheet.create({
           alignSelf: "center",
           color: "#D2D2D2",
           fontFamily: "Poppins_400Regular",
+          marginBottom: "15%"
       }
 })
 
