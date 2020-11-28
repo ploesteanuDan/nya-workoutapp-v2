@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "nya-workoutapp-v2",
-    "slug": "nya-workoutapp-v2",
+    "name": "NYA Workouts",
+    "slug": "NYA Workouts",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
