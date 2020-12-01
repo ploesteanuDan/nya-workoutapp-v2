@@ -11,7 +11,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, Route } from "react-router-native";
+import { Link } from "react-router-native";
 import { Spring } from "react-spring/renderprops";
 import { Video } from "expo-av";
 
@@ -119,7 +119,7 @@ export default class ExercisesScreen extends Component {
                 >
                   <View>
                     <Video
-                      source={{uri: FileSystem.documentDirectory + item.vid}}
+                      source={{uri: FileSystem.documentDirectory + item.vidName}}
                       rate={1.0}
                       volume={1.0}
                       isMuted={true}
@@ -262,10 +262,11 @@ container: {
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
+    width: Dimensions.get("window").width * 0.95,
     
   },
   title: {
-    fontSize: 45,
+    fontSize: 40,
     color: "#D2D2D2",
     marginTop: 20,
     marginBottom: 20,

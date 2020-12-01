@@ -1,6 +1,7 @@
 import React from 'react';
 import { LogBox, StyleSheet, View} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { AppLoading } from 'expo';
 
 //COMPONENTS IMPORT
 import DashboardScreen from "./components/DashboardScreen"
@@ -17,7 +18,6 @@ import {
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation",
   "VirtualizedList",
-  "fontFamily"
 ]);
 
 export default function App() {
@@ -29,13 +29,17 @@ export default function App() {
     Poppins_600SemiBold_Italic,
   });
 
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <DashboardScreen/>
     </View>
   );
-}
+  }
+
 
 const styles = StyleSheet.create({
   container: {

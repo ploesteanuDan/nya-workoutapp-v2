@@ -4,8 +4,7 @@ import { Text, StyleSheet, View, Dimensions, FlatList, TouchableOpacity, Image, 
 import { Link } from "react-router-native";
 
 //STYLE IMPORTS
-import {Spring, config} from 'react-spring/renderprops'
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { Spring } from 'react-spring/renderprops'
 import { LinearGradient } from "expo-linear-gradient";
 
 //API
@@ -21,6 +20,7 @@ export default class TrainingScreen extends Component {
     state = {
         trainings: [],
         exForFetch: [],
+        currentTraining: []
     }
 
     handleSearch(text){
@@ -66,36 +66,85 @@ export default class TrainingScreen extends Component {
         .catch(err => {
             console.log(err)
         })
+        FileSystem.deleteAsync(FileSystem.documentDirectory + "v1.mp4")
+        .then(
+            console.log("Deleted")
+        )
+        .catch(err => {
+            console.log(err)
+        })
+        FileSystem.deleteAsync(FileSystem.documentDirectory + "v2.mp4")
+        .then(
+            console.log("Deleted")
+        )
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     componentDidMount(){
-        axios.get("https://nya-api.herokuapp.com/nya/api/v1/trainings")
-        .then(res => {
-            this.setState({
-                trainings: res.data.data.trainings,
-            })
-            // console.log("state-------------------------------------------------------------")
-            // console.log(this.state.trainings);
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.getTr()
     }
 
-   async getEx(item){
-        console.log(item.exercises)
-        this.setState({exForFetch: item.exercises})
+    async getTr(){
+        const sendGetRequest = async () => {
+            try {
+                const resp = await axios.get("https://nya-api.herokuapp.com/nya/api/v1/trainings/")
+                this.setState({trainings: resp.data.data.trainings})
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        await sendGetRequest();
+
+        for(let i = 0; i < this.state.trainings.length; i++){
+            const imageInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory + this.state.trainings[i].imgName)
+            if(!imageInfo.exists){
+                const downloadResumable = FileSystem.createDownloadResumable(
+                    this.state.trainings[i].imgLink,
+                    FileSystem.documentDirectory + this.state.trainings[i].imgName,
+                    {}
+                )
+
+                try {
+                    const {uri} = await downloadResumable.downloadAsync();
+                    console.log("Finished downloading to ", uri)
+                } catch (err) {
+                    console.log(err)
+                } finally {
+                    if (!err.exists){
+                        console.log("Get request finalized with no errors.")
+                    }
+                }
+            }
+        }
+    }
+
+    async getEx(item){
+
+        const sendGetRequest = async () => {
+            try {
+                const resp = await axios.get("https://nya-api.herokuapp.com/nya/api/v1/trainings/" + item._id);
+                this.setState({currentTraining: resp.data.data.training})
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        
+       await sendGetRequest();
+
         for(let i = 0; i < item.exercises.length; i++)
-        {
-            const videoInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory + item.exercises[i].vid)
+        {   
+            const videoInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory + this.state.currentTraining.exercises[i].vidName)
             if (!videoInfo.exists)
             {   
                 this.setState({
                     itemLoading: item.name
                 })
                 const downloadResumable = FileSystem.createDownloadResumable(
-                    'https://nya-api.herokuapp.com/nya/api/v1/media/' + item.exercises[i].vid,
-                    FileSystem.documentDirectory + item.exercises[i].vid,
+                    this.state.currentTraining.exercises[i].vidLink,
+                    FileSystem.documentDirectory + this.state.currentTraining.exercises[i].vidName,
                     {},
                 )
     
@@ -109,23 +158,25 @@ export default class TrainingScreen extends Component {
                     console.log("get request finalized")
                     this.setState({
                         fetchWasSucc: true,
-                        training: item
+                        training: item,
                     })
 
                 }
             }
             else {
-                console.log("video ", item.exercises[i].vid, " already downloaded")
+                console.log("video ", item.exercises[i].vidName, " already downloaded")
                 this.setState({
                     fetchWasSucc: true,
-                    training: item
+                    training: item,
                 })
 
             }
 
         }
-    }
 
+        
+
+    }
 
     render() {
         if (this.state.fetchWasSucc){
@@ -183,7 +234,7 @@ export default class TrainingScreen extends Component {
                                         <View style={{width: "100%", height: "100%",}}>
                                             <Image
                                                 style={styles.trainingPacketsBg}
-                                                source={{uri: "https://nya-api.herokuapp.com/nya/api/v1/media/" + item.img }}
+                                                source={{uri: FileSystem.documentDirectory + item.imgName }}
                                             />
                                             <LinearGradient
                                             colors={["transparent", item.color]}
@@ -217,7 +268,7 @@ export default class TrainingScreen extends Component {
                                             {props => 
                                                 <View style={props}>
                                                      <Spring
-                                                reset={false}
+                                                reset={true}
                                                 from={{         
                                                     width: Dimensions.get("window").width * 0.05,
                                                     height: Dimensions.get("window").width * 0.05,
@@ -236,6 +287,7 @@ export default class TrainingScreen extends Component {
                                                 {loadingProps => <Image style={loadingProps}/>}
                                             </Spring>
                                             <Spring
+                                                reset={true}
                                                 delay={500}
                                                 from={{         
                                                     width: Dimensions.get("window").width * 0.05,
@@ -254,6 +306,7 @@ export default class TrainingScreen extends Component {
                                                 {loadingProps => <Image style={loadingProps}/>}
                                             </Spring>
                                             <Spring
+                                                reset={true}
                                                 delay={1000}
                                                 from={{         
                                                     width: Dimensions.get("window").width * 0.05,
@@ -342,11 +395,11 @@ export default class TrainingScreen extends Component {
                         >
                             No more workouts available right now. Stay tunned for more.
                         </Text>
-                        {/* <TouchableOpacity>
+                        <TouchableOpacity>
                             <Text style={styles.clearCacheButton} onPress={()=>{this.handleClearCache()}}>
                                 Clear cache
                             </Text>
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
                         </ScrollView>
                         <LinearGradient
                             pointerEvents="none"
