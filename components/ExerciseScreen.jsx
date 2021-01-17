@@ -85,7 +85,7 @@ export default class ExercisesScreen extends Component {
               onPress={()=>{this.props.handleReturn()}}
             >
               <View style={styles.titleContainer}>
-                <Image style={styles.backButton} source={require("../assets/backButton.png")}/>
+                <Text style={styles.titleButton} allowFontScaling={false}> Go back </Text>
                 <Text style={styles.title} allowFontScaling={false}>
                   {this.props.training.name}
                 </Text>
@@ -149,7 +149,7 @@ export default class ExercisesScreen extends Component {
                     backgroundColor: item.done ? "#50d6d3" : "#191919",
                     padding: 10,
                     paddingVertical: 5,
-                    borderRadius: 10,
+                    borderRadius: 12,
                     zIndex: 9000, }}>
                     {doneButtonProps =>                           
                   <Text          
@@ -196,7 +196,8 @@ export default class ExercisesScreen extends Component {
           height: this.state.trainingFinished ? "100%" : "0%",
           backgroundColor: "black",
           top: 0,
-          position: "absolute"
+          position: "absolute",
+          opacity: this.state.trainingFinished ? 0.9 : 0,
         }}>
           {finishScreenProps => 
             <View style={finishScreenProps}>
@@ -261,23 +262,26 @@ container: {
   titleContainer: {
     flexDirection: "row",
     alignItems: 'center',
-    justifyContent: 'center',
     width: Dimensions.get("window").width * 0.95,
     
   },
   title: {
-    fontSize: 40,
+    fontSize: 35,
     color: "#D2D2D2",
-    marginTop: 20,
-    marginBottom: 20,
     fontFamily: "Poppins_800ExtraBold_Italic",
   },
-  backButton:{
-    width: 35,
-    height: 35,
-    marginTop: 10,
-    marginBottom: 20,
-    marginRight: 20
+  titleButton: {
+    color: "#191919",
+    backgroundColor: "#50d6d3",
+    width: Dimensions.get("window").width * 0.25,
+    height: Dimensions.get("window").width * 0.115,
+    fontSize: 15,
+    borderRadius: 20,
+    textAlign: "center",
+    lineHeight: 45,
+    marginRight: Dimensions.get("window").width * 0.025,
+    marginBottom: 10,
+    fontFamily: "Poppins_600SemiBold_Italic",
   },
   exCard: {
     backgroundColor: "#1D1D1D",
@@ -304,7 +308,7 @@ container: {
     backgroundColor: "#191919",
     padding: 10,
     paddingVertical: 5,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   exName: {
     position: "absolute",
@@ -316,10 +320,10 @@ container: {
     backgroundColor: "#191919",
     padding: 10,
     paddingVertical: 5,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   finishScreenText: {
-    top: "45%",
+    top: "25%",
     fontSize: 40,
     color: "#D2D2D2",
     fontFamily: "Poppins_800ExtraBold_Italic",
@@ -327,12 +331,19 @@ container: {
     textAlign: "center",
   },
   finishScreenSubtext: {
-    fontSize: 25,
-    fontFamily: "Poppins_600SemiBold",
-    color: "#D2D2D2",
+    fontSize: 20,
+    color: "#191919",
     alignSelf: "center",
     textAlign: "center",
+    backgroundColor: "#50d6d3",
+    borderRadius: 50,
+    fontFamily: "Poppins_600SemiBold_Italic",
+    padding: 10,
+    paddingHorizontal: 15,
+    bottom: "10%"
+
   },
+
 
   
 });
